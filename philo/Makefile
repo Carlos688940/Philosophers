@@ -6,7 +6,7 @@
 #    By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/14 16:21:28 by carlaugu          #+#    #+#              #
-#    Updated: 2025/05/14 16:38:11 by carlaugu         ###   ########.fr        #
+#    Updated: 2025/05/20 14:22:55 by carlaugu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,14 +16,14 @@ NAME	= philo
 # FILES                                                                        #
 # ============================================================================ #
 
-SRC	=$(addprefix $(SRC_DIR)/main.c)
+SRC	=$(addprefix $(SRC_DIR)/, main.c errors.c philo_utils.c)
 
-OBJS	=$(addprefix $(BUILD_DIR)/, .....)
+OBJS	=$(addprefix $(BUILD_DIR)/, $(notdir $(SRC:.c=.o)))
 # ============================================================================ #
 # PATHS                                                                        #
 # ============================================================================ #
 
-SRC_DIR		= src
+SRC_DIR		= src/
 
 BUILD_DIR	= .build
 
@@ -39,25 +39,31 @@ MAKE	= make -C
 RM	= rm -rf
 MKDIR	= mkdir -p
 
+$(BUILD_DIR):
+	@$(MKDIR) $(BUILD_DIR)
+	@printf "$(GRN)>> Created .build/ directory for object files$(NC)\n"
+
 # ============================================================================ #
 # RULES                                                                        #
 # ============================================================================ #
 
 all: $(NAME)
 
-$(NAME): $(BUILD_DIR)
+$(NAME): $(BUILD_DIR) $(OBJS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	@printf "$(GRN)>> Compilation completed!$(NC)\n"; \
 
-$(BUILD_DIR):
-	$(MKDIR) $(BUILD_DIR)
-	@printf "$(GRN)>> Created .build/ directory for object files$(NC)\n\n"
-
+$(BUILD_DIR)/%.o: $(SRC_DIR)%.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	
 ##@ CLEAN-UP RULES
-
 clean:	## Remove object files
-	$(RM) $(BUILD_DIR)
+	@$(RM) $(BUILD_DIR)
+	@printf "$(GRN)>> Objects cleaned!$(NC)\n"; \
 
 fclean: clean	## Remove executable files
-	$(RM) $(NAME)
+	@$(RM) $(NAME)
+	@printf "$(GRN)>> Everything cleaned!$(NC)\n\n"; \
 
 re: fclean all	## Purge and recompile
 
@@ -79,7 +85,7 @@ WHI = \033[0;37m
 
 # Bold text colors
 RED_B = \033[1;31m
-GRN_B = \033[1;32m
+GRN_B = \033[1;32m	
 YEL_B = \033[1;33m
 BLU_B = \033[1;34m
 MAG_B = \033[1;35m
