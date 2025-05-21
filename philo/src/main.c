@@ -12,35 +12,67 @@
 
 #include "../include/philo.h"
 
-int	check_syntax(char *s)
+int	init_mutex(t_data *data);
+int	reset_data(t_data *data);
+int	get_data_and_init(char **input, t_data *data, int ac);
+
+int	main(int ac, char **av)
 {
-	while (*s)
-	{
-		if (!ft_isdigit(*s))
-			return (print_syntax_errors("Only numeric inputs are allowed!\n"));
-		s++;
-	}
-	return (0);	
+	t_data	data;	
+
+	if (check_input(ac, av) < 0)
+		return (1);
+	if (get_data_and_init(av + 1, &data, ac) < 0)
+		return (1);
+	reset_data(&data);
+	return (0);
 }
 
-int	check_input(int ac, char **av)
+int	init_mutex(t_data *data)
 {
 	int	i;
 
-	i = 0;
-	if (ac < 5 || ac > 6)
-		return (print_syntax_errors("Wrong number of arguments! Program needs 4 or 5 arguments!\n"));
-	while (av[++i])
+	i = -1;
+	while (++i < data->n_philos)
 	{
-		if (check_syntax(av[i]) < 0)
-			return (-1);
+		if (pthread_mutex_init(&data->forks[i], NULL) < 0)
+			return (print_error("Error: pthread_mutex_init\n"));
 	}
 	return (0);
 }
 
-int	main(int ac, char **av)
+int	reset_data(t_data *data)
 {
-	if (check_input(ac, av) < 0)
-		return (1);
+	int	i;
+
+	i = -1;
+	while (++i < data->n_philos)
+	{
+		if (pthread_mutex_destroy(&data->forks[i]) < 0)
+			return (print_error("Error: pthread_mutex_destroy\n"));
+	}
+	free(data->forks);
+	return (0);
+}
+
+int	get_data_and_init(char **input, t_data *data, int ac)
+{
+	memset(data, 0,sizeof(t_data));
+	data->n_philos = ft_atoi(input[0]);
+	if (data->n_philos == 0)
+		return (print_error("Error: number of philosophers must be at leat 1\n"));
+	data->time_to_die = ft_atoi(input[1]);
+	data->time_to_eat = ft_atoi(input[2]);
+	data->time_to_sleep = ft_atoi(input[3]);
+	if (ac == 6)
+		data->n_time_to_eat = ft_atoi(input[4]);
+	data->forks = malloc(data->n_philos * sizeof(pthread_mutex_t));
+	if (!data->forks)
+		return (print_error("Cannot allocate memory\n"));
+	if (init_mutex(data) < 0)
+	{
+		free (data->forks);
+		return (-1);
+	}
 	return (0);
 }

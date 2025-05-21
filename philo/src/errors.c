@@ -12,7 +12,7 @@
 
 #include "../include/philo.h"
 
-int	print_syntax_errors(char *s)
+int	print_error(char *s)
 {
 	write(STDERR_FILENO, s, ft_strlen(s));
 	return (-1);
