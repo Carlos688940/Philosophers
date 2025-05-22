@@ -6,7 +6,7 @@
 #    By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/14 16:21:28 by carlaugu          #+#    #+#              #
-#    Updated: 2025/05/20 14:22:55 by carlaugu         ###   ########.fr        #
+#    Updated: 2025/05/22 11:22:55 by carlaugu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ BUILD_DIR	= .build
 # ============================================================================ #
 CC	= cc
 CFLAGS	=  -Wall -Wextra -Werror
-CFLAGS	+= -g
+CFLAGS	+= -fsanitize=thread -g
 
 MAKE	= make -C
 
@@ -43,14 +43,14 @@ $(BUILD_DIR):
 	@$(MKDIR) $(BUILD_DIR)
 	@printf "$(GRN)>> Created .build/ directory for object files$(NC)\n"
 
-# ============================================================================ #
-# RULES                                                                        #
+# ============================================================================ #				
+# RULES                                                                        #	
 # ============================================================================ #
 
 all: $(NAME)
 
 $(NAME): $(BUILD_DIR) $(OBJS)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) 
 	@printf "$(GRN)>> Compilation completed!$(NC)\n"; \
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)%.c
@@ -66,6 +66,10 @@ fclean: clean	## Remove executable files
 	@printf "$(GRN)>> Everything cleaned!$(NC)\n\n"; \
 
 re: fclean all	## Purge and recompile
+
+vg:
+	valgrind --tool=helgrind ./${NAME} ////////////////<args>.
+	valgrind --tool=drd ./${NAME}
 
 # ============================================================================ #
 # UTILS: SHELL FORMATTING                                                      #

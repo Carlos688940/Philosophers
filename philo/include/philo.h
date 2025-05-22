@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <sys/time.h>
+#include <stdbool.h>
 
 typedef struct s_data
 {
@@ -14,12 +16,16 @@ typedef struct s_data
 	int		time_to_eat;
 	int		time_to_sleep;
 	int		n_time_to_eat;
+	long		start_time;
+	struct timeval	tv;
 	pthread_mutex_t	*forks;
 }	t_data;
 
 typedef	struct s_philo
 {
 	int		id;
+	long		last_meal;
+	bool		dead_flag;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 }	t_philo;

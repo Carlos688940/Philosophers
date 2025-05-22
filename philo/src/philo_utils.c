@@ -6,7 +6,7 @@
 /*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 13:59:54 by carlaugu          #+#    #+#             */
-/*   Updated: 2025/05/20 14:13:24 by carlaugu         ###   ########.fr       */
+/*   Updated: 2025/05/22 09:29:06 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	check_syntax(char *s)
 	while (*s)
 	{
 		if (!ft_isdigit(*s) && *s != '+')
-			return (print_error("Error: only numeric inputs or positive numbers are allowed !\n"));
+			return (print_error("Error: only numeric inputs and positive numbers are allowed !\n"));
 		s++;
 	}
 	return (0);	
