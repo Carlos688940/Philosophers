@@ -11,23 +11,26 @@
 
 typedef struct s_data
 {
+	bool		dead_flag;
         int		n_philos;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
 	int		n_time_to_eat;
-	long		start_time;
-	struct timeval	tv;
+	size_t		time_to_die;
+	size_t		time_to_eat;
+	size_t		time_to_sleep;
+	size_t		start_time;
 	pthread_mutex_t	*forks;
+	struct	s_philo	*philos;
+	struct timeval	tv;
 }	t_data;
 
 typedef	struct s_philo
 {
+	pthread_t	*thread;
 	int		id;
 	long		last_meal;
-	bool		dead_flag;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
+	struct	s_data	*data;
 }	t_philo;
 
 /* -------------------------------------------------------------------------- */

@@ -6,7 +6,7 @@
 /*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 18:29:22 by carlaugu          #+#    #+#             */
-/*   Updated: 2025/05/22 12:32:16 by carlaugu         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:35:36 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int	get_data_and_init(char **input, t_data *data, int ac);
 int	init_mutex(t_data *data);
 int	reset_data(t_data *data);
+void	create_threads(t_data *data);/////////
+// void	*routine(void *philo);
 
 int	main(int ac, char **av)
 {
@@ -25,14 +27,36 @@ int	main(int ac, char **av)
 	if (get_data_and_init(av + 1, &data, ac) < 0)
 		return (1);
 	if (reset_data(&data) < 0)
-		return (1);	
-	// routine();///////////////////
+		return (1);
+	create_threads(&data);
 	return (0);
 }
 
-// void	routine()
+
+void	create_threads(t_data *data)
+{
+	int	i;
+	int	j = 0;
+
+	i = -1;
+	(void)j;
+	data->philos = malloc(data->n_philos * sizeof(t_philo));
+	// if (!data->philos)
+	while (++i < data->n_philos)
+	{
+		memset(&data->philos[i], 0, sizeof(t_philo));
+		data->philos[i].id = i;
+		data->philos[i].last_meal = 0;
+		data->philos[i].thread = malloc(sizeof(pthread_t));
+		// if (!data->philos->thread)
+		data->philos[i].data = data;
+	}
+}
+
+// void	*routine(void *philo)
 // {
-// 	while ()
+	
+// 	return (NULL);
 // }
 
 int	get_data_and_init(char **input, t_data *data, int ac)
@@ -54,6 +78,7 @@ int	get_data_and_init(char **input, t_data *data, int ac)
 		free (data->forks);
 		return (-1);
 	}
+	memset(&data->tv, 0, sizeof(data->tv));
 	gettimeofday(&data->tv, NULL); 
 	data->start_time = data->tv.tv_sec * 1000 + data->tv.tv_usec / 1000;
 	printf("start time: %ld\n", data->start_time);/////////////////////////////////////// delete
