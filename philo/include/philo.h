@@ -9,6 +9,10 @@
 #include <sys/time.h>
 #include <stdbool.h>
 
+#define INIT 1
+#define LOCK 2
+#define UNLOCK 3
+
 typedef struct s_data
 {
 	bool		dead_flag;
