@@ -12,8 +12,10 @@
 
 #include "../include/philo.h"
 
-int	print_error(char *s)
+void	error_exit(char *s, t_data *data)
 {
 	write(STDERR_FILENO, s, ft_strlen(s));
-	return (-1);
+	if (data)
+		free_all(data);
+	exit(1);
 }

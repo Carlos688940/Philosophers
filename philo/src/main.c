@@ -12,137 +12,25 @@
 
 #include "../include/philo.h"
 
-int	get_data_and_init(char **input, t_data *data, int ac);
-int	handle_mutex(t_data *data, int action, pthread_mutex_t *fork);
-int	reset_data(t_data *data, int i);
-void	create_philo(t_data *data);
+void	convert_data(char **input, t_data *data, int ac);
+void	data_init(t_data *data);
 
 int	main(int ac, char **av)
 {
 	t_data	data;
 
-	if (check_input(ac, av) < 0)
-		return (1);
-	if (get_data_and_init(av + 1, &data, ac) < 0)
-		return (1);
-	// if (create_threads(&data) < 0)
-	// 	return (1);
-	// join_threads(&data);
-	if (reset_data(&data, data.n_philos) < 0)
-		return (1);
+	check_input(ac, av);
+	memset(&data, 0, sizeof(t_data));
+	convert_data(av + 1, &data, ac); //n_philos ,time_die, time_eat, time_sleep, meals_nbr
+	data_init(&data); //forks, philos, end
 	return (0);
 }
 
-// int	create_threads(t_data *data)
-// {
-// 	int	i;
-
-// 	i = -1;
-// 	while (++i < data->n_philos)
-// 	{
-// 	}
-// }
-
-
-void	convert_data(char **input, t_data *data)
+void	data_init(t_data *data)
 {
-	data->n_philos = ft_atoi(input[0]);
-	if (data->n_philos == 0)
-		return (print_error("Error: number of philosophers must be at least 1\n"));
-	data->time_to_die = ft_atoi(input[1]);
-	data->time_to_eat = ft_atoi(input[2]);
-	data->time_to_sleep = ft_atoi(input[3]);
+	data->end =false;
+	data->forks = alloc_mem(sizeof(pthread_mutex_t) * data->n_philos, NULL);
+	data->philos = alloc_mem(sizeof(t_philo) * data->n_philos, data);
 }
 
 
-
-
-int	get_data_and_init(char **input, t_data *data, int ac)
-{	
-	memset(data, 0,sizeof(t_data));
-	convert_data(input, data);
-	if (ac == 6)
-		data->n_time_to_eat = ft_atoi(input[4]);
-	data->forks = malloc(data->n_philos * sizeof(pthread_mutex_t));
-	if (!data->forks)
-		return (print_error("Cannot allocate memory\n"));
-	memset(&data->forks, 0, sizeof(pthread_mutex_t));
-	if (handle_mutex(data, INIT, NULL) < 0)
-		return (-1);
-	create_philo(data);
-	memset(&data->tv, 0, sizeof(data->tv));
-	gettimeofday(&data->tv, NULL); 
-	data->start_time = data->tv.tv_sec * 1000 + data->tv.tv_usec / 1000;
-	printf("start time: %ld\n", data->start_time);/////////////////////////////////////// delete
-	data->dead_flag = true;
-	return (0);
-}
-
-void	create_philo(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	data->philos = malloc(data->n_philos * sizeof(t_philo));
-	// if (!data->philos)
-	while (++i < data->n_philos)
-	{
-		memset(&data->philos[i], 0, sizeof(t_philo));
-		data->philos[i].id = i;
-		data->philos[i].last_meal = 0;
-		data->philos[i].left_fork = &data->forks[i];
-		data->philos[i].right_fork = &data->forks[i + 1];
-		data->philos[i].thread = malloc(sizeof(pthread_t));
-		// if (!data->philos[i].thread)
-		memset(&data->philos[i].thread, 0, sizeof(pthread_t));
-		data->philos[i].data = data;
-		if (pthread_create(&data->philos[i].thread, NULL, routine, &data->philos[i]) < 0)
-		{
-			print_error("///.");
-			break;
-		}
-	}
-}
-
-int	reset_data(t_data *data, int i)
-{
-	int	j;
-
-	j = -1;
-	while (++j < i)
-	{
-		if (pthread_mutex_destroy(&data->forks[i]) < 0)
-			return (print_error("Error: failed mutex destroy\n"));
-	}
-	free(data->forks);
-	data->forks = NULL;
-	return (0);
-}
-
-int	handle_mutex(t_data *data, int action, pthread_mutex_t *fork)
-{
-	int	i;
-	int	res;
-
-	i = -1;
-	if (action == INIT)
-	{
-		while (++i < data->n_philos)
-		{
-			res = pthread_mutex_init(&data->forks[i], NULL);
-			if (res < 0)
-				break;				
-		}
-	}
-	else if (action == LOCK)
-		res = pthread_mutex_lock(fork);
-	else if (action == UNLOCK)
-		res = pthread_mutex_unlock(fork);
-	if (res != 0)
-	{
-		print_error("Error: handle mutext failed!\n");
-		if (reset_data(data, i) < 0)
-			free(data->forks);
-	}
-	return (res);		
-}

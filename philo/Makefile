@@ -16,7 +16,7 @@ NAME	= philo
 # FILES                                                                        #
 # ============================================================================ #
 
-SRC	=$(addprefix $(SRC_DIR)/, main.c errors.c philo_utils.c)
+SRC	=$(addprefix $(SRC_DIR)/, main.c errors.c philo_utils.c mini_libft.c)
 
 OBJS	=$(addprefix $(BUILD_DIR)/, $(notdir $(SRC:.c=.o)))
 # ============================================================================ #

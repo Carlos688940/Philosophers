@@ -12,73 +12,57 @@
 
 #include "../include/philo.h"
 
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
+void	check_syntax(char *s);
 
-int	ft_strlen(const char *s)
-{
-	int	i;
-
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-int	ft_atoi(const char *str)
-{
-	int	i;
-	int	sign;
-	int	result;
-
-	i = 0;
-	sign = 1;
-	result = 0;
-	while ((str[i] >= 9 && str[i] <= 13) || (str[i] == 32))
-		i++;
-	if (str[i] == '+')
-		i++;
-	else if (str[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		result = result * 10 + (str[i] - '0');
-		i++;
-	}
-	return (result * sign);
-}
-
-int	check_syntax(char *s)
-{
-	while (*s)
-	{
-		if (!ft_isdigit(*s) && *s != '+')
-			return (print_error("Error: only numeric inputs and positive numbers are allowed !\n"));
-		s++;
-	}
-	return (0);	
-}
-
-int	check_input(int ac, char **av)
+void	check_input(int ac, char **av)
 {
 	int	i;
 
 	i = 0;
 	if (ac < 5 || ac > 6)
-		return (print_error("Error: wrong number of arguments. Program needs 4 or 5 arguments!\n"));
+		error_exit("Error: wrong number of arguments. Program needs 4 or 5 arguments!\n", NULL);
 	while (av[++i])
+		check_syntax(av[i]);
+}
+
+void	check_syntax(char *s)
+{
+	while (*s)
 	{
-		if (check_syntax(av[i]) < 0)
-			return (-1);
+		if (!ft_isdigit(*s) && *s != '+')
+			error_exit("Error: only numeric inputs and positive numbers are allowed !\n", NULL);
+		s++;
 	}
-	return (0);
+}
+
+void	convert_data(char **input, t_data *data, int ac)
+{
+	data->n_philos = ft_atol(input[0]);
+	if (data->n_philos == 0)
+		error_exit("Error: number of philosophers must be at least 1\n", NULL);
+	data->time_to_die = ft_atol(input[1]);
+	data->time_to_eat = ft_atol(input[2]);
+	data->time_to_sleep = ft_atol(input[3]);
+	if (ac == 6)
+		data->meals_nbr = ft_atol(input[4]);
+	if (data->n_philos > INT_MAX || data->time_to_die > INT_MAX 
+			|| data->time_to_eat > INT_MAX || data->time_to_sleep > INT_MAX 
+			|| data->meals_nbr > INT_MAX)
+		error_exit("Some value is too big, INT_MAX is the limit!\n", NULL);
+}
+
+void	free_all(t_data *data)
+{
+	free(data->forks);
+	free(data->philos);
+}
+
+void	*alloc_mem(size_t size, t_data *data)
+{
+	void	*ptr;
+
+	ptr = malloc(size);
+	if (!ptr)
+		error_exit("Error: malloc failed\n", data);
+	return (ptr);
 }
