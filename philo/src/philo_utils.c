@@ -51,6 +51,20 @@ void	convert_data(char **input, t_data *data, int ac)
 		error_exit("Some value is too big, INT_MAX is the limit!\n", NULL);
 }
 
+void	handle_mutex(pthread_mutex_t *mutex, t_code code, int nbr, t_data *data)
+{
+	if (code == LOCK)
+		pthread_mutex_lock(mutex);
+	else if (code == UNLOCK)
+		pthread_mutex_unlock(mutex);
+	else if (code == INIT)
+		pthread_mutex_init(mutex, NULL);
+	else if (code == DESTROY)
+		pthread_mutex_destroy(mutex);
+	else
+		write(2, "Error: wrong code\n", ft_strlen("Error: wrong code\n"));
+}
+
 void	free_all(t_data *data)
 {
 	free(data->forks);
@@ -66,3 +80,4 @@ void	*alloc_mem(size_t size, t_data *data)
 		error_exit("Error: malloc failed\n", data);
 	return (ptr);
 }
+ 

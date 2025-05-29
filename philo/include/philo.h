@@ -10,9 +10,13 @@
 #include <stdbool.h>
 #include <limits.h>
 
-#define INIT 1
-#define LOCK 2
-#define UNLOCK 3
+typedef enum s_code
+{
+	INIT,
+	LOCK ,
+	UNLOCK,
+	DESTROY
+}	t_code;
 
 typedef struct s_data
 {  
@@ -30,7 +34,7 @@ typedef struct s_data
 
 typedef	struct s_philo
 {
-	pthread_t	*thread;
+	pthread_t	thread;
 	int		id;
 	long		last_meal;
 	int		meals_count;
@@ -49,6 +53,7 @@ long	ft_atol(char *str);
 void	*alloc_mem(size_t size, t_data *data);
 void	error_exit(char *s, t_data *data);
 void	free_all(t_data *data);
+void	handle_mutex(pthread_mutex_t *mutex, t_code code, int nbr, t_data *data);
 
 /* -------------------------------------------------------------------------- */
 /*                                   Syntax                                   */

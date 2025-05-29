@@ -26,11 +26,30 @@ int	main(int ac, char **av)
 	return (0);
 }
 
+void	set_philos(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->n_philos)
+	{
+		data->philos[i].id = i;
+		data->philos[i].full= false;
+		data->philos[i].left_fork = &data->forks[i];
+		data->philos[i].right_fork = &data->forks[i + 1 % data->n_philos];
+		// data->philos[i].thread = pthread_create(); TODO Acabar isto.......
+		data->philos[i].data = data;
+	}
+}
+
 void	data_init(t_data *data)
 {
 	data->end =false;
 	data->forks = alloc_mem(sizeof(pthread_mutex_t) * data->n_philos, NULL);
+	memset(data->forks, 0, sizeof(pthread_mutex_t) * data->n_philos);
 	data->philos = alloc_mem(sizeof(t_philo) * data->n_philos, data);
+	memset(data->philos, 0, sizeof(t_philo) * data->n_philos);
+	set_philos(data);
 }
 
 
