@@ -26,19 +26,21 @@ typedef struct s_data
 	long		time_to_sleep;
 	long		meals_nbr;
 	long		start_time;
-	bool		end;
+	bool		end_status; // used to check is simulation ends
+	bool		ready_status; // used to check is can start
+	pthread_mutex_t	mtx_init; // used in wait_init
+	pthread_mutex_t	mtx_end; // used in check_status
 	pthread_mutex_t	*forks;
 	struct	s_philo	*philos;
-	struct timeval	tv;
 }	t_data;
 
 typedef	struct s_philo
 {
 	pthread_t	thread;
-	int		id;
 	long		last_meal;
+	int		id;
 	int		meals_count;
-	bool		full;  
+	int		full;  
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	struct	s_data	*data;
@@ -47,18 +49,23 @@ typedef	struct s_philo
 /* -------------------------------------------------------------------------- */
 /*                                    Utils                                   */
 /* -------------------------------------------------------------------------- */
+bool	get_bool(pthread_mutex_t *mutex, bool *val);
+bool	check_status(pthread_mutex_t *mtx, bool *status);
 int	ft_isdigit(int c);
 int	ft_strlen(const char *s);
+int	error_exit(char *s, t_data *data);
 long	ft_atol(char *str);
+long	get_value(pthread_mutex_t *mutex, long *val);
 void	*alloc_mem(size_t size, t_data *data);
-void	error_exit(char *s, t_data *data);
 void	free_all(t_data *data);
 void	handle_mutex(pthread_mutex_t *mutex, t_code code);
+void	wait_init(t_data *data);
+void	set_bool(pthread_mutex_t *mutex, bool *val, bool code);
 
 /* -------------------------------------------------------------------------- */
 /*                                   Syntax                                   */
 /* -------------------------------------------------------------------------- */
-void	check_syntax(char *s);
-void	check_input(int ac, char **av);
+int	check_syntax(char *s);
+int	check_input(int ac, char **av);
 
 #endif

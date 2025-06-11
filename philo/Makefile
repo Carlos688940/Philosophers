@@ -6,7 +6,7 @@
 #    By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/14 16:21:28 by carlaugu          #+#    #+#              #
-#    Updated: 2025/05/22 11:22:55 by carlaugu         ###   ########.fr        #
+#    Updated: 2025/06/11 13:21:39 by carlaugu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME	= philo
 # FILES                                                                        #
 # ============================================================================ #
 
-SRC	=$(addprefix $(SRC_DIR)/, main.c errors.c philo_utils.c mini_libft.c)
+SRC	=$(addprefix $(SRC_DIR)/, main.c errors.c philo_utils.c mini_libft.c philo_utils2.c)
 
 OBJS	=$(addprefix $(BUILD_DIR)/, $(notdir $(SRC:.c=.o)))
 # ============================================================================ #
