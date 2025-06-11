@@ -53,7 +53,7 @@ long	ft_atol(char *str);
 void	*alloc_mem(size_t size, t_data *data);
 void	error_exit(char *s, t_data *data);
 void	free_all(t_data *data);
-void	handle_mutex(pthread_mutex_t *mutex, t_code code, int nbr, t_data *data);
+void	handle_mutex(pthread_mutex_t *mutex, t_code code);
 
 /* -------------------------------------------------------------------------- */
 /*                                   Syntax                                   */

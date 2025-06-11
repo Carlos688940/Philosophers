@@ -1,2 +1,9 @@
 TODO se tem apenas 1 filosofo como vai comer? -> precisa de 2 garfos
-TODO 
+TODO Create all threads
+TODO create routine function
+TODO if is even(par) start eats first, if not start thinking
+TODO join all threads in the end  
+
+
+Notes:
+TODO if the meals number is 0, stop simulation 

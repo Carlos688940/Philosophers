@@ -28,19 +28,18 @@ int	main(int ac, char **av)
 
 void	set_philos(t_data *data)
 {
-	int	i;
+	int	pos;
 
-	i = -1;
-	while (++i < data->n_philos)
+	pos = -1;
+	while (++pos < data->n_philos)
 	{
-		data->philos[i].id = i;
-		data->philos[i].full= false;
-		data->philos[i].left_fork = &data->forks[i];
-		data->philos[i].right_fork = &data->forks[i + 1 % data->n_philos];
-		// data->philos[i].thread = pthread_create(); TODO Acabar isto.......
-		data->philos[i].data = data;
+		data->philos[pos].id = pos;
+		data->philos[pos].full= false;
+		data->philos[pos].left_fork = &data->forks[pos];
+		data->philos[pos].right_fork = &data->forks[pos + 1 % data->n_philos]; 
+		data->philos[pos].data = data; 
 	}
-}
+} 
 
 void	data_init(t_data *data)
 {

@@ -44,14 +44,18 @@ void	convert_data(char **input, t_data *data, int ac)
 	data->time_to_eat = ft_atol(input[2]);
 	data->time_to_sleep = ft_atol(input[3]);
 	if (ac == 6)
+	{
 		data->meals_nbr = ft_atol(input[4]);
+		if (data->meals_nbr == 0)
+			exit(1);
+	}
 	if (data->n_philos > INT_MAX || data->time_to_die > INT_MAX 
 			|| data->time_to_eat > INT_MAX || data->time_to_sleep > INT_MAX 
 			|| data->meals_nbr > INT_MAX)
 		error_exit("Some value is too big, INT_MAX is the limit!\n", NULL);
 }
 
-void	handle_mutex(pthread_mutex_t *mutex, t_code code, int nbr, t_data *data)
+void	handle_mutex(pthread_mutex_t *mutex, t_code code)
 {
 	if (code == LOCK)
 		pthread_mutex_lock(mutex);
