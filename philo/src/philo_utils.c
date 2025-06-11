@@ -38,41 +38,6 @@ int	check_syntax(char *s)
 	return (0);
 }
 
-int	convert_data(char **input, t_data *data, int ac)
-{
-	data->n_philos = ft_atol(input[0]);
-	if (data->n_philos == 0)
-		return (error_exit("Error: number of philosophers must be at least 1\n", NULL));
-	data->time_to_die = ft_atol(input[1]);
-	data->time_to_eat = ft_atol(input[2]);
-	data->time_to_sleep = ft_atol(input[3]);
-	if (ac == 6)
-	{
-		data->meals_nbr = ft_atol(input[4]);
-		if (data->meals_nbr == 0)
-			return (-1);
-	}
-	if (data->n_philos > INT_MAX || data->time_to_die > INT_MAX 
-			|| data->time_to_eat > INT_MAX || data->time_to_sleep > INT_MAX 
-			|| data->meals_nbr > INT_MAX)
-		return (error_exit("Some value is too big, INT_MAX is the limit!\n", NULL));
-	return (0);
-}
-
-void	handle_mutex(pthread_mutex_t *mutex, t_code code)
-{
-	if (code == LOCK)
-		pthread_mutex_lock(mutex);
-	else if (code == UNLOCK)
-		pthread_mutex_unlock(mutex);
-	else if (code == INIT)
-		pthread_mutex_init(mutex, NULL);
-	else if (code == DESTROY)
-		pthread_mutex_destroy(mutex);
-	else
-		write(2, "Error: wrong code\n", ft_strlen("Error: wrong code\n"));
-}
-
 void	free_all(t_data *data)
 {
 	free(data->forks);
@@ -89,3 +54,10 @@ void	*alloc_mem(size_t size, t_data *data)
 	return (ptr);
 }
  
+long	get_time(void)
+{
+	struct timeval	tv;
+	
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}

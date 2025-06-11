@@ -1,22 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_utils2.c                                     :+:      :+:    :+:   */
+/*   mutex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: carlaugu <carlaugu@student.42porto.com>    #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/11 13:19:46 by carlaugu          #+#    #+#             */
-/*   Updated: 2025/06/11 15:09:46 by carlaugu         ###   ########.fr       */
+/*   Created: 2025-06-11 20:13:12 by carlaugu          #+#    #+#             */
+/*   Updated: 2025-06-11 20:13:12 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-
-void	wait_init(t_data *data)
-{
-	while (!get_bool(&data->check_init, &data->ready))
-		;
-}
 
 bool	get_bool(pthread_mutex_t *mutex, bool *val)
 {
@@ -28,19 +22,13 @@ bool	get_bool(pthread_mutex_t *mutex, bool *val)
 	return (res);	
 }
 
-void	set_bool(pthread_mutex_t *mutex, bool *val, bool code)
+void	unlock_forks(t_philo *philo)
 {
-	pthread_mutex_lock(mutex);
-	*val = code;
-	pthread_mutex_unlock(mutex);
+	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_unlock(philo->right_fork);
 }
 
-bool	check_status(pthread_mutex_t *mtx, bool *status)
-{
-	return (get_bool(mtx, status));
-}
-
-long	get_value(pthread_mutex_t *mutex, long *val)
+long	get_long(pthread_mutex_t *mutex, long *val)
 {
 	long	res;
 
@@ -48,4 +36,15 @@ long	get_value(pthread_mutex_t *mutex, long *val)
 	res = *val;
 	pthread_mutex_unlock(mutex);
 	return (res);	
+}
+
+bool	check_status(pthread_mutex_t *mtx, bool *status)
+{
+	return (get_bool(mtx, status));
+}
+
+void	wait_init(t_data *data)
+{
+	while (!get_bool(&data->mtx_init, &data->ready_status))
+		;
 }

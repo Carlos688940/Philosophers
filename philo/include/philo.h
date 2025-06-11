@@ -10,13 +10,14 @@
 #include <stdbool.h>
 #include <limits.h>
 
-typedef enum s_code
+typedef enum s_action
 {
-	INIT,
-	LOCK ,
-	UNLOCK,
-	DESTROY
-}	t_code;
+	FORKS,
+	EAT,
+	SLEEP,
+	THINK,
+	DIE
+}	t_action;
 
 typedef struct s_data
 {  
@@ -30,6 +31,7 @@ typedef struct s_data
 	bool		ready_status; // used to check is can start
 	pthread_mutex_t	mtx_init; // used in wait_init
 	pthread_mutex_t	mtx_end; // used in check_status
+	pthread_mutex_t	mtx_print;
 	pthread_mutex_t	*forks;
 	struct	s_philo	*philos;
 }	t_data;
@@ -46,26 +48,46 @@ typedef	struct s_philo
 	struct	s_data	*data;
 }	t_philo;
 
+
+/* -------------------------------------------------------------------------- */
+/*                                   Routine                                  */
+/* -------------------------------------------------------------------------- */
+void	*routine(void *data);
 /* -------------------------------------------------------------------------- */
 /*                                    Utils                                   */
 /* -------------------------------------------------------------------------- */
-bool	get_bool(pthread_mutex_t *mutex, bool *val);
-bool	check_status(pthread_mutex_t *mtx, bool *status);
-int	ft_isdigit(int c);
-int	ft_strlen(const char *s);
 int	error_exit(char *s, t_data *data);
-long	ft_atol(char *str);
-long	get_value(pthread_mutex_t *mutex, long *val);
+long	get_time(void);
 void	*alloc_mem(size_t size, t_data *data);
 void	free_all(t_data *data);
-void	handle_mutex(pthread_mutex_t *mutex, t_code code);
-void	wait_init(t_data *data);
-void	set_bool(pthread_mutex_t *mutex, bool *val, bool code);
 
+/* -------------------------------------------------------------------------- */
+/*                                 Mini_libft                                 */
+/* -------------------------------------------------------------------------- */
+int	ft_strlen(const char *s);
+int	ft_isdigit(int c);
+long	ft_atol(char *str);
 /* -------------------------------------------------------------------------- */
 /*                                   Syntax                                   */
 /* -------------------------------------------------------------------------- */
 int	check_syntax(char *s);
 int	check_input(int ac, char **av);
+
+/* -------------------------------------------------------------------------- */
+/*                                    Mutex                                   */
+/* -------------------------------------------------------------------------- */
+bool	get_bool(pthread_mutex_t *mutex, bool *val);
+bool	check_status(pthread_mutex_t *mtx, bool *status);
+long	get_long(pthread_mutex_t *mutex, long *val);
+void	set_bool(pthread_mutex_t *mutex, bool *val, bool code);
+void	lock_forks(t_philo *philo);
+void	unlock_forks(t_philo *philo);
+void	wait_init(t_data *data);
+/* -------------------------------------------------------------------------- */
+/*                                    Init and End                              */
+/* -------------------------------------------------------------------------- */
+int	convert_data(char **input, t_data *data, int ac);
+void	data_init(t_data *data);
+void	unset_all(t_data *data);
 
 #endif

@@ -15,38 +15,6 @@
 int	convert_data(char **input, t_data *data, int ac);
 void	data_init(t_data *data);
 
-long	get_time(void);
-void	lock_forks(pthread_mutex_t *first, pthread_mutex_t *second);
-
-
-
-
-void	join_threads(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	while (++i < data->n_philos)
-		pthread_join(data->philos[i].thread, NULL);
-}
-
-void	mutex_destroy(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	while (++i < data->n_philos)
-		pthread_mutex_destroy(&data->forks[i]);
-	pthread_mutex_destroy(&data->mtx_init);	
-	pthread_mutex_destroy(&data->mtx_end);	
-}
-
-void	unset_all(t_data *data)
-{
-	join_threads(data);
-	mutex_destroy(data); 
-}
-
 int	main(int ac, char **av)
 {
 	t_data	data;
@@ -61,14 +29,29 @@ int	main(int ac, char **av)
 	return (0);
 }
 
+void	print_action(t_action *act, long time, pthread_mutex_t *mtx, t_philo *philo)
+{
+	pthread_mutex_lock(mtx);
+	if (act == EAT)
+		printf("%d %d is eating");//TODO add args to priontf
+	else if (act == FORKS)
+		printf("%d %d has taken a fork");//TODO add args to printf
+	else if (act == SLEEP)
+		printf("%d %d is sleeping");//TODO add args to printf
+	else if (act == THINK)
+		printf("%d %d is thinking");//TODO add args to printf
+	else if (act == DIE)
+		printf("%d %d died");//TODO add args to printf
+	pthread_mutex_unlock(mtx);
+}
+
 void	eat(t_philo *philo)
 {
-	if (philo->id & 1)
-		lock_forks(philo->right_fork, philo->left_fork);
-	else
-		lock_forks(philo->left_fork, philo->right_fork);
+	//TODO check if is full - return
 	philo->last_meal = get_time();
-	ft_usleep(); //TODO create this function
+	print_action(FORKS, time, &philo->data->mtx_print, philo);
+	print_action(FORKS, time, &philo->data->mtx_print, philo);
+	// ft_usleep(); //TODO create this function
 }
 
 void	*routine(void *data)
@@ -79,50 +62,9 @@ void	*routine(void *data)
 	wait_init(philo->data);
 	while (!check_status(&philo->data->mtx_end, &philo->data->end_status))
 	{
+		lock_forks(philo);
 		eat(philo);
+		unlock_forks(philo);
 	}
 	return (NULL);
-}
-
-void	lock_forks(pthread_mutex_t *first, pthread_mutex_t *second)
-{
-	pthread_mutex_lock(first);
-	pthread_mutex_lock(second);
-}
-
-void	set_philos(t_data *data)
-{
-	int	pos;
-
-	pos = -1;
-	while (++pos < data->n_philos)
-	{
-		data->philos[pos].id = pos;
-		data->philos[pos].full= 0;
-		data->philos[pos].left_fork = &data->forks[pos];
-		pthread_mutex_init(data->philos[pos].left_fork, NULL); //init mutex
-		data->philos[pos].right_fork = &data->forks[pos + 1 % data->n_philos]; 
-		data->philos[pos].data = data;
-		pthread_create(&data->philos[pos].thread, NULL, routine, &data->philos[pos]);
-	}
-} 
-
-long	get_time(void)
-{
-	struct timeval	tv;
-	
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
-
-void	data_init(t_data *data)
-{
-	data->end_status = false;
-	data->forks = alloc_mem(sizeof(pthread_mutex_t) * data->n_philos, NULL);
-	memset(data->forks, 0, sizeof(pthread_mutex_t) * data->n_philos);
-	data->philos = alloc_mem(sizeof(t_philo) * data->n_philos, data);
-	memset(data->philos, 0, sizeof(t_philo) * data->n_philos);
-	set_philos(data);
-	data->start_time = get_time();
-	set_bool(&data->mtx_init, &data->ready_status, true);
 }
