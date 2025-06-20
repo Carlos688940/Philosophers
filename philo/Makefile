@@ -17,7 +17,7 @@ NAME	= philo
 # ============================================================================ #
 
 SRC	=$(addprefix $(SRC_DIR)/, end.c errors.c init.c main.c mini_libft.c \
-mutex_utils.c mutex_utils2.c philo_utils.c)
+mutex_utils.c mutex_utils2.c philo_utils.c routine.c monitor.c)
 
 OBJS	=$(addprefix $(BUILD_DIR)/, $(notdir $(SRC:.c=.o)))
 # ============================================================================ #
@@ -33,7 +33,7 @@ BUILD_DIR	= .build
 # ============================================================================ #
 CC	= cc
 CFLAGS	=  -Wall -Wextra -Werror
-CFLAGS	+= -fsanitize=thread -g
+CFLAGS	+= -fsanitize=thread -g -pthread
 
 MAKE	= make -C
 
@@ -69,8 +69,8 @@ fclean: clean	## Remove executable files
 re: fclean all	## Purge and recompile
 
 vg:
-	valgrind --tool=helgrind ./${NAME} ////////////////<args>.
-	valgrind --tool=drd ./${NAME}
+# valgrind --tool=helgrind ./${NAME} 5 800 200 300 5
+	valgrind --tool=drd ./${NAME} 5 800 200 300 5
 
 # ============================================================================ #
 # UTILS: SHELL FORMATTING                                                      #

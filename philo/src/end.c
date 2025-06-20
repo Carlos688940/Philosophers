@@ -12,32 +12,40 @@
 
 #include "../include/philo.h"
 
-void	mutex_destroy(t_data *data);
-void	join_threads(t_data *data);
+void	mutex_destroy(t_data *data, int nbr);
+void	join_threads(t_data *data, int nbr);
 
-void	unset_all(t_data *data)
+void	unset_all(t_data *data, int nbr)
 {
-	join_threads(data);
-	mutex_destroy(data);
+	join_threads(data, nbr);
+	mutex_destroy(data, nbr);
         free_all(data);
 }
 
-void	mutex_destroy(t_data *data)
+void	mutex_destroy(t_data *data, int nbr)
 {
 	int	i;
 
 	i = -1;
-	while (++i < data->n_philos)
+	while (++i < nbr)
+	{
 		pthread_mutex_destroy(&data->forks[i]);
-	pthread_mutex_destroy(&data->mtx_init);	
-	pthread_mutex_destroy(&data->mtx_end);	
+		pthread_mutex_destroy(&data->philos[i].mtx_lst_meal);
+	}
+	if (nbr == data->n_philos)
+	{
+		pthread_mutex_destroy(&data->mtx_init);	
+		pthread_mutex_destroy(&data->mtx_end);
+		pthread_mutex_destroy(&data->mtx_print);
+	}
 }
 
-void	join_threads(t_data *data)
+void	join_threads(t_data *data, int nbr)
 {
 	int	i;
 
 	i = -1;
-	while (++i < data->n_philos)
+	while (++i < nbr)
 		pthread_join(data->philos[i].thread, NULL);
+	pthread_join(data->monitor, NULL);
 }

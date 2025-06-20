@@ -12,10 +12,12 @@
 
 #include "../include/philo.h"
 
-void	init_philos(t_data *data);
+int	set_philos(t_data *data);
+void	init_general_mutex(t_data *data);
 
 int	convert_data(char **input, t_data *data, int ac)
 {
+	memset(data, 0, sizeof(t_data));
 	data->n_philos = ft_atol(input[0]);
 	if (data->n_philos == 0)
 		return (error_exit("Error: number of philosophers must be at least 1\n", NULL));
@@ -35,31 +37,55 @@ int	convert_data(char **input, t_data *data, int ac)
 	return (0);
 }
 
-void	data_init(t_data *data)
+int	data_init(t_data *data)
 {
 	data->end_status = false;
 	data->forks = alloc_mem(sizeof(pthread_mutex_t) * data->n_philos, NULL);
 	memset(data->forks, 0, sizeof(pthread_mutex_t) * data->n_philos);
 	data->philos = alloc_mem(sizeof(t_philo) * data->n_philos, data);
 	memset(data->philos, 0, sizeof(t_philo) * data->n_philos);
-	init_philos(data);
+	init_general_mutex(data);
+	if (set_philos(data) < 0)
+		return (-1);
 	data->start_time = get_time();
 	set_bool(&data->mtx_init, &data->ready_status, true);
+	return (0);
 }
 
-void	init_philos(t_data *data)
+void	init_general_mutex(t_data *data)
+{
+	pthread_mutex_init(&data->mtx_init, NULL);
+	pthread_mutex_init(&data->mtx_end, NULL);
+	pthread_mutex_init(&data->mtx_print, NULL);
+	pthread_mutex_init(&data->mtx_fail, NULL);
+}
+
+int	set_philos(t_data *data)
 {
 	int	pos;
 
 	pos = -1;
 	while (++pos < data->n_philos)
 	{
+		pthread_mutex_init(&data->forks[pos], NULL);
 		data->philos[pos].id = pos + 1;
 		data->philos[pos].full= 0;
 		data->philos[pos].left_fork = &data->forks[pos];
-		pthread_mutex_init(data->philos[pos].left_fork, NULL); //init mutex
-		data->philos[pos].right_fork = &data->forks[pos + 1 % data->n_philos]; 
+		data->philos[pos].right_fork = &data->forks[(pos + 1) % data->n_philos];
 		data->philos[pos].data = data;
-		pthread_create(&data->philos[pos].thread, NULL, routine, &data->philos[pos]);
+		pthread_mutex_init(&data->philos[pos].mtx_lst_meal, NULL);
+		if (pthread_create(&data->philos[pos].thread, NULL, routine, &data->philos[pos]) != 0)
+		{
+			set_bool(&data->mtx_fail, &data->fail, true);
+			unset_all(data, pos);
+			return (-1);
+		}
 	}
+	if (pthread_create(&data->monitor, NULL, monitoring, data) != 0)
+	{
+		set_bool(&data->mtx_fail, &data->fail, true);
+		unset_all(data, pos);
+		return (-1);
+	}
+	return (0);
 }

@@ -22,7 +22,8 @@ bool	get_bool(pthread_mutex_t *mutex, bool *val)
 	return (res);	
 }
 
-void	unlock_forks(t_philo *philo)
+void	
+unlock_forks(t_philo *philo)
 {
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
@@ -45,6 +46,6 @@ bool	check_status(pthread_mutex_t *mtx, bool *status)
 
 void	wait_init(t_data *data)
 {
-	while (!get_bool(&data->mtx_init, &data->ready_status))
+	while (!get_bool(&data->mtx_init, &data->ready_status) && !get_bool(&data->mtx_fail, &data->fail))
 		;
 }

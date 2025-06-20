@@ -41,7 +41,9 @@ int	check_syntax(char *s)
 void	free_all(t_data *data)
 {
 	free(data->forks);
+	data->forks = NULL;
 	free(data->philos);
+	data->philos = NULL;
 }
 
 void	*alloc_mem(size_t size, t_data *data)
