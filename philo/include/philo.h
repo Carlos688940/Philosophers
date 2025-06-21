@@ -66,12 +66,11 @@ typedef	struct s_philo
 	int		meals_count;
 	bool		full;
 	bool		die;
-	bool		starvation;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	mtx_lst_meal;
-	pthread_mutex_t	mtx_full;
 	pthread_mutex_t	mtx_die;
+	pthread_mutex_t	mtx_full;
 	struct	s_data	*data;
 }	t_philo;
 
@@ -88,7 +87,7 @@ int	error_exit(char *s, t_data *data);
 long	get_time(void);
 void	*alloc_mem(size_t size, t_data *data);
 void	free_all(t_data *data);
-void	ft_usleep(long time);
+void	ft_usleep(long time, t_philo *philo);
 
 /* -------------------------------------------------------------------------- */
 /*                                 Mini_libft                                 */

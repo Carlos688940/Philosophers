@@ -26,17 +26,10 @@ void	*routine(void *data)
 		return (NULL);
 	while (!check_status(&philo->data->mtx_end, &philo->data->end_status))
 	{
-		if (philo->data->meals_nbr && philo->meals_count == philo->data->meals_nbr)
-		{
-			set_bool(&philo->mtx_full, &philo->full, true);
-			break;
-		}
 		lock_forks(philo);
 		eating(philo);
 		unlock_forks(philo);
-		if (philo->starvation)
-			set_bool(&philo->mtx_die, &philo->die, true);
-		if (get_bool(&philo->mtx_full, &philo->full))
+		if (philo->full)
 			break;
 		sleeping(philo);
 		thinking(philo);
@@ -44,14 +37,14 @@ void	*routine(void *data)
 	return (NULL);
 }
 
-void	ft_usleep(long time)
+void	ft_usleep(long time, t_philo *philo)
 {
 	long	start;
 	long	diff;
 
 	start = get_time();
 	diff = time;
-	while (diff > 0)
+	while (diff > 0 && !get_bool(&philo->mtx_die, &philo->die))
 	{
 		if (diff > 100)
 			usleep(100 * 1000);
@@ -59,6 +52,8 @@ void	ft_usleep(long time)
 			usleep(diff * 1000);
 		diff = time - (get_time() - start);
 	}
+	if (get_bool(&philo->mtx_die, &philo->die)) ////////delete
+		printf("morri no usleep\n");
 }
 
 void	thinking(t_philo *philo)
@@ -69,7 +64,7 @@ void	thinking(t_philo *philo)
 		return;
 	time = get_time() - philo->data->start_time;
 	print_action(THINK, time, &philo->data->mtx_print, philo);
-	ft_usleep(1);
+	ft_usleep(1, philo);
 }
 
 void	sleeping(t_philo *philo)
@@ -80,15 +75,7 @@ void	sleeping(t_philo *philo)
 		return;
 	time = get_time() - philo->data->start_time;
 	print_action(SLEEP, time, &philo->data->mtx_print, philo);
-	ft_usleep(philo->data->time_to_sleep);
-}
-
-int	get_diff(t_philo *philo)
-{
-	if (philo->last_meal)
-		return (get_time() - philo->last_meal);
-	else
-		return (get_time() - philo->data->start_time);
+	ft_usleep(philo->data->time_to_sleep, philo);
 }
 
 void	eating(t_philo *philo)
@@ -98,28 +85,11 @@ void	eating(t_philo *philo)
 	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
 		return;
 	philo->meals_count++;
-        set_long(&philo->mtx_lst_meal, &philo->last_meal, get_time());
-	time = get_time() - philo->data->start_time;
+	time = get_time();
+        set_long(&philo->mtx_lst_meal, &philo->last_meal, time);
+	time = time - philo->data->start_time;
 	print_action(EAT, time, &philo->data->mtx_print, philo);
-	if (philo->data->time_to_die - get_diff(philo) > philo->data->time_to_eat)
-	{
-		printf("vou comer normal %d\n", philo->id);
-		ft_usleep(philo->data->time_to_eat);
-	}
-	else
-	{
-		usleep(1000);
-		if (philo->data->time_to_die - get_diff(philo) > 0)
-		{
-			printf("A diferença é maior que 0\n");
-			ft_usleep(philo->data->time_to_die - get_diff(philo));
-			printf("saí\n");
-		}
-		else
-			printf("A diferença é menor que 0\n");
-		philo->starvation = true;
-		return ;
-	}
+	ft_usleep(philo->data->time_to_eat, philo);
 	if (philo->data->meals_nbr && philo->meals_count == philo->data->meals_nbr)
 		set_bool(&philo->mtx_full, &philo->full, true);
 }
