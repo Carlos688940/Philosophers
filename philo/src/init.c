@@ -37,8 +37,19 @@ int	convert_data(char **input, t_data *data, int ac)
 	return (0);
 }
 
+int	mono_philo(t_data *data)
+{
+	data->start_time = get_time();
+	printf(ORG"%ld 1 has taken a fork\n"RST, get_time() - data->start_time);
+	ft_usleep(data->time_to_die, NULL);
+	printf(RED"%ld 1 died\n"RST, get_time() - data->start_time);
+	return (0);
+}
+
 int	data_init(t_data *data)
 {
+	if (data->n_philos == 1)
+		return (mono_philo(data));
 	data->end_status = false;
 	data->forks = alloc_mem(sizeof(pthread_mutex_t) * data->n_philos, NULL);
 	memset(data->forks, 0, sizeof(pthread_mutex_t) * data->n_philos);

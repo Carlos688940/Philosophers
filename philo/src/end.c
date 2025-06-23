@@ -17,8 +17,10 @@ void	join_threads(t_data *data, int nbr);
 
 void	unset_all(t_data *data, int nbr)
 {
-	join_threads(data, nbr);
+	if (nbr == 1)
+		return ;
 	mutex_destroy(data, nbr);
+	join_threads(data, nbr);
         free_all(data);
 }
 
@@ -31,12 +33,14 @@ void	mutex_destroy(t_data *data, int nbr)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
 		pthread_mutex_destroy(&data->philos[i].mtx_lst_meal);
+		pthread_mutex_destroy(&data->philos[i].mtx_full);
 	}
 	if (nbr == data->n_philos)
 	{
 		pthread_mutex_destroy(&data->mtx_init);	
 		pthread_mutex_destroy(&data->mtx_end);
 		pthread_mutex_destroy(&data->mtx_print);
+		pthread_mutex_destroy(&data->mtx_fail);
 	}
 }
 

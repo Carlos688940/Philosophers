@@ -44,16 +44,13 @@ void	ft_usleep(long time, t_philo *philo)
 
 	start = get_time();
 	diff = time;
-	while (diff > 0 && !get_bool(&philo->mtx_die, &philo->die))
+	while (diff > 0)
 	{
-		if (diff > 100)
-			usleep(100 * 1000);
-		else
-			usleep(diff * 1000);
+		usleep(500);
 		diff = time - (get_time() - start);
+		if (philo && get_bool(&philo->data->mtx_end, &philo->data->end_status))
+			break;
 	}
-	if (get_bool(&philo->mtx_die, &philo->die)) ////////delete
-		printf("morri no usleep\n");
 }
 
 void	thinking(t_philo *philo)
@@ -85,10 +82,9 @@ void	eating(t_philo *philo)
 	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
 		return;
 	philo->meals_count++;
-	time = get_time();
-        set_long(&philo->mtx_lst_meal, &philo->last_meal, time);
-	time = time - philo->data->start_time;
+	time = get_time() - philo->data->start_time;
 	print_action(EAT, time, &philo->data->mtx_print, philo);
+        set_long(&philo->mtx_lst_meal, &philo->last_meal, get_time());
 	ft_usleep(philo->data->time_to_eat, philo);
 	if (philo->data->meals_nbr && philo->meals_count == philo->data->meals_nbr)
 		set_bool(&philo->mtx_full, &philo->full, true);
