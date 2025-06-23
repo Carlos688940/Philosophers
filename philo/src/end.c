@@ -19,8 +19,8 @@ void	unset_all(t_data *data, int nbr)
 {
 	if (nbr == 1)
 		return ;
-	mutex_destroy(data, nbr);
 	join_threads(data, nbr);
+	mutex_destroy(data, nbr);
         free_all(data);
 }
 
@@ -51,5 +51,6 @@ void	join_threads(t_data *data, int nbr)
 	i = -1;
 	while (++i < nbr)
 		pthread_join(data->philos[i].thread, NULL);
-	pthread_join(data->monitor, NULL);
+	if (nbr == data->n_philos)
+		pthread_join(data->monitor, NULL);
 }

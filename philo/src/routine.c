@@ -37,44 +37,6 @@ void	*routine(void *data)
 	return (NULL);
 }
 
-void	ft_usleep(long time, t_philo *philo)
-{
-	long	start;
-	long	diff;
-
-	start = get_time();
-	diff = time;
-	while (diff > 0)
-	{
-		usleep(500);
-		diff = time - (get_time() - start);
-		if (philo && get_bool(&philo->data->mtx_end, &philo->data->end_status))
-			break;
-	}
-}
-
-void	thinking(t_philo *philo)
-{
-	long	time;
-
-	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
-		return;
-	time = get_time() - philo->data->start_time;
-	print_action(THINK, time, &philo->data->mtx_print, philo);
-	ft_usleep(1, philo);
-}
-
-void	sleeping(t_philo *philo)
-{
-	long	time;
-
-	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
-		return;
-	time = get_time() - philo->data->start_time;
-	print_action(SLEEP, time, &philo->data->mtx_print, philo);
-	ft_usleep(philo->data->time_to_sleep, philo);
-}
-
 void	eating(t_philo *philo)
 {
 	long	time;
@@ -88,4 +50,26 @@ void	eating(t_philo *philo)
 	ft_usleep(philo->data->time_to_eat, philo);
 	if (philo->data->meals_nbr && philo->meals_count == philo->data->meals_nbr)
 		set_bool(&philo->mtx_full, &philo->full, true);
+}
+
+void	sleeping(t_philo *philo)
+{
+	long	time;
+
+	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
+		return;
+	time = get_time() - philo->data->start_time;
+	print_action(SLEEP, time, &philo->data->mtx_print, philo);
+	ft_usleep(philo->data->time_to_sleep, philo);
+}
+
+void	thinking(t_philo *philo)
+{
+	long	time;
+
+	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
+		return;
+	time = get_time() - philo->data->start_time;
+	print_action(THINK, time, &philo->data->mtx_print, philo);
+	ft_usleep(1, philo);
 }

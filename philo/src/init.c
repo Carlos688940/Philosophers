@@ -30,10 +30,12 @@ int	convert_data(char **input, t_data *data, int ac)
 		if (data->meals_nbr == 0)
 			return (-1);
 	}
-	if (data->n_philos > INT_MAX || data->time_to_die > INT_MAX 
-			|| data->time_to_eat > INT_MAX || data->time_to_sleep > INT_MAX 
+	if (data->n_philos > INT_MAX || data->time_to_die > INT_MAX
+			|| data->time_to_eat > INT_MAX || data->time_to_sleep > INT_MAX
 			|| data->meals_nbr > INT_MAX)
 		return (error_exit("Some value is too big, INT_MAX is the limit!\n", NULL));
+	if (data->time_to_die == 0 || data->time_to_eat == 0 || data->time_to_sleep == 0)
+		return (-1);
 	return (0);
 }
 
@@ -50,7 +52,6 @@ int	data_init(t_data *data)
 {
 	if (data->n_philos == 1)
 		return (mono_philo(data));
-	data->end_status = false;
 	data->forks = alloc_mem(sizeof(pthread_mutex_t) * data->n_philos, NULL);
 	memset(data->forks, 0, sizeof(pthread_mutex_t) * data->n_philos);
 	data->philos = alloc_mem(sizeof(t_philo) * data->n_philos, data);
@@ -58,6 +59,12 @@ int	data_init(t_data *data)
 	init_general_mutex(data);
 	if (set_philos(data) < 0)
 		return (-1);
+	if (pthread_create(&data->monitor, NULL, monitoring, data) != 0)
+	{
+		set_bool(&data->mtx_fail, &data->fail, true);
+		unset_all(data, data->n_philos);
+		return (-1);
+	}
 	data->start_time = get_time();
 	set_bool(&data->mtx_init, &data->ready_status, true);
 	return (0);
@@ -85,18 +92,13 @@ int	set_philos(t_data *data)
 		data->philos[pos].right_fork = &data->forks[(pos + 1) % data->n_philos];
 		data->philos[pos].data = data;
 		pthread_mutex_init(&data->philos[pos].mtx_lst_meal, NULL);
+		pthread_mutex_init(&data->philos[pos].mtx_full, NULL);
 		if (pthread_create(&data->philos[pos].thread, NULL, routine, &data->philos[pos]) != 0)
 		{
 			set_bool(&data->mtx_fail, &data->fail, true);
 			unset_all(data, pos);
 			return (-1);
 		}
-	}
-	if (pthread_create(&data->monitor, NULL, monitoring, data) != 0)
-	{
-		set_bool(&data->mtx_fail, &data->fail, true);
-		unset_all(data, pos);
-		return (-1);
 	}
 	return (0);
 }
