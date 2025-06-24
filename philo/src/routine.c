@@ -6,7 +6,7 @@
 /*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 09:14:26 by carlaugu          #+#    #+#             */
-/*   Updated: 2025/06/24 12:56:18 by carlaugu         ###   ########.fr       */
+/*   Updated: 2025/06/24 16:15:41 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,16 @@ void	*routine(void *data)
 		return (NULL);
 	while (!check_status(&philo->data->mtx_end, &philo->data->end_status))
 	{
+		if (philo->id & 1)
+			thinking(philo);
 		lock_forks(philo);
 		eating(philo);
 		unlock_forks(philo);
 		if (get_bool(&philo->mtx_full, &philo->full))
 			break ;
 		sleeping(philo);
-		thinking(philo);
+		if (!(philo->id & 1))
+			thinking(philo);
 	}
 	return (NULL);
 }
