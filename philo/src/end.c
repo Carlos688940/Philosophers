@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   end.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: carlaugu <carlaugu@student.42porto.com>    #+#  +:+       +#+        */
+/*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-11 20:25:05 by carlaugu          #+#    #+#             */
-/*   Updated: 2025-06-11 20:25:05 by carlaugu         ###   ########.fr       */
+/*   Created: 2025/06/11 20:25:05 by carlaugu          #+#    #+#             */
+/*   Updated: 2025/06/24 11:15:28 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	unset_all(t_data *data, int nbr)
 		return ;
 	join_threads(data, nbr);
 	mutex_destroy(data, nbr);
-        free_all(data);
+	free_all(data);
 }
 
 void	mutex_destroy(t_data *data, int nbr)
@@ -37,7 +37,7 @@ void	mutex_destroy(t_data *data, int nbr)
 	}
 	if (nbr == data->n_philos)
 	{
-		pthread_mutex_destroy(&data->mtx_init);	
+		pthread_mutex_destroy(&data->mtx_init);
 		pthread_mutex_destroy(&data->mtx_end);
 		pthread_mutex_destroy(&data->mtx_print);
 		pthread_mutex_destroy(&data->mtx_fail);

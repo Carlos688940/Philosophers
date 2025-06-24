@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine,c                                          :+:      :+:    :+:   */
+/*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: carlaugu <carlaugu@student.42porto.com>    #+#  +:+       +#+        */
+/*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-12 09:14:26 by carlaugu          #+#    #+#             */
-/*   Updated: 2025-06-12 09:14:26 by carlaugu         ###   ########.fr       */
+/*   Created: 2025/06/12 09:14:26 by carlaugu          #+#    #+#             */
+/*   Updated: 2025/06/24 12:56:18 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	*routine(void *data)
 		lock_forks(philo);
 		eating(philo);
 		unlock_forks(philo);
-		if (philo->full)
-			break;
+		if (get_bool(&philo->mtx_full, &philo->full))
+			break ;
 		sleeping(philo);
 		thinking(philo);
 	}
@@ -42,11 +42,11 @@ void	eating(t_philo *philo)
 	long	time;
 
 	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
-		return;
+		return ;
 	philo->meals_count++;
 	time = get_time() - philo->data->start_time;
 	print_action(EAT, time, &philo->data->mtx_print, philo);
-        set_long(&philo->mtx_lst_meal, &philo->last_meal, get_time());
+	set_long(&philo->mtx_lst_meal, &philo->lst_meal, get_time());
 	ft_usleep(philo->data->time_to_eat, philo);
 	if (philo->data->meals_nbr && philo->meals_count == philo->data->meals_nbr)
 		set_bool(&philo->mtx_full, &philo->full, true);
@@ -57,7 +57,7 @@ void	sleeping(t_philo *philo)
 	long	time;
 
 	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
-		return;
+		return ;
 	time = get_time() - philo->data->start_time;
 	print_action(SLEEP, time, &philo->data->mtx_print, philo);
 	ft_usleep(philo->data->time_to_sleep, philo);
@@ -68,7 +68,7 @@ void	thinking(t_philo *philo)
 	long	time;
 
 	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
-		return;
+		return ;
 	time = get_time() - philo->data->start_time;
 	print_action(THINK, time, &philo->data->mtx_print, philo);
 	ft_usleep(1, philo);

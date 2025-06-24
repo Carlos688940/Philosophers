@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   mutex_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: carlaugu <carlaugu@student.42porto.com>    #+#  +:+       +#+        */
+/*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-11 20:14:39 by carlaugu          #+#    #+#             */
-/*   Updated: 2025-06-11 20:14:39 by carlaugu         ###   ########.fr       */
+/*   Created: 2025/06/11 20:14:39 by carlaugu          #+#    #+#             */
+/*   Updated: 2025/06/24 13:12:16 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	set_bool(pthread_mutex_t *mutex, bool *val, bool code)
+void	set_bool(t_mtx *mutex, bool *val, bool code)
 {
 	pthread_mutex_lock(mutex);
 	*val = code;
 	pthread_mutex_unlock(mutex);
 }
 
-void	set_long(pthread_mutex_t *mutex, long *var, long val)
+void	set_long(t_mtx *mutex, long *var, long val)
 {
 	pthread_mutex_lock(mutex);
 	*var = val;
@@ -40,11 +40,9 @@ void	lock_forks(t_philo *philo)
 		pthread_mutex_lock(philo->left_fork);
 		pthread_mutex_lock(philo->right_fork);
 	}
-	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
-		return;
 	time = get_time() - philo->data->start_time;
 	print_action(FORKS, time, &philo->data->mtx_print, philo);
-	time = get_time()- philo->data->start_time;
+	time = get_time() - philo->data->start_time;
 	print_action(FORKS, time, &philo->data->mtx_print, philo);
 }
 
@@ -53,8 +51,8 @@ void	ft_usleep(long time, t_philo *philo)
 	long	start;
 	long	diff;
 
-	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
-		return;
+	if (philo && get_bool(&philo->data->mtx_end, &philo->data->end_status))
+		return ;
 	start = get_time();
 	diff = time;
 	while (diff > 0)
@@ -62,6 +60,6 @@ void	ft_usleep(long time, t_philo *philo)
 		usleep(500);
 		diff = time - (get_time() - start);
 		if (philo && get_bool(&philo->data->mtx_end, &philo->data->end_status))
-			break;
+			break ;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_libft.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: carlaugu <carlaugu@student.42porto.com>    #+#  +:+       +#+        */
+/*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-05-29 14:22:23 by carlaugu          #+#    #+#             */
-/*   Updated: 2025-05-29 14:22:23 by carlaugu         ###   ########.fr       */
+/*   Created: 2025/05/29 14:22:23 by carlaugu          #+#    #+#             */
+/*   Updated: 2025/06/24 11:28:28 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
