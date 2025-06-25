@@ -6,7 +6,7 @@
 /*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:14:39 by carlaugu          #+#    #+#             */
-/*   Updated: 2025/06/24 16:45:41 by carlaugu         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:27:32 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,11 @@ void	ft_usleep(long time, t_philo *philo)
 	long	start;
 	long	diff;
 
-	if (philo && get_bool(&philo->data->mtx_end, &philo->data->end_status))
-		return ;
 	start = get_time();
 	diff = time;
 	while (diff > 0)
 	{
-		usleep(500);
+		usleep(200);
 		diff = time - (get_time() - start);
 		if (philo && get_bool(&philo->data->mtx_end, &philo->data->end_status))
 			break ;

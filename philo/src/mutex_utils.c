@@ -6,7 +6,7 @@
 /*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:13:12 by carlaugu          #+#    #+#             */
-/*   Updated: 2025/06/24 11:33:14 by carlaugu         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:28:01 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ bool	check_status(t_mtx *mtx, bool *status)
 
 void	wait_init(t_data *data)
 {
-	while (!get_bool(&data->mtx_init, &data->ready_status) \
-	&& !get_bool(&data->mtx_fail, &data->fail))
-		usleep(50);
+	while (!get_bool(&data->mtx_init, &data->ready_status))
+		usleep(1);
 }

@@ -6,7 +6,7 @@
 /*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:25:05 by carlaugu          #+#    #+#             */
-/*   Updated: 2025/06/24 11:15:28 by carlaugu         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:07:39 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	mutex_destroy(t_data *data, int nbr)
 		pthread_mutex_destroy(&data->mtx_init);
 		pthread_mutex_destroy(&data->mtx_end);
 		pthread_mutex_destroy(&data->mtx_print);
-		pthread_mutex_destroy(&data->mtx_fail);
+		// pthread_mutex_destroy(&data->mtx_fail);
 	}
 }
 

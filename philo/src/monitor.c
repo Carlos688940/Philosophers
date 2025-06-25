@@ -6,7 +6,7 @@
 /*   By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 14:32:01 by carlaugu          #+#    #+#             */
-/*   Updated: 2025/06/24 13:01:20 by carlaugu         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:16:54 by carlaugu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ void	*monitoring(void *info)
 		if (i == data->n_philos - 1)
 			i = -1;
 		if (data->meals_nbr && all_full(philos, data->n_philos))
+		{
+			set_bool(&data->mtx_end, &data->end_status, true);
 			break ;
+		}
 	}
 	return (NULL);
 }

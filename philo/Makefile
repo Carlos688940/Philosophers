@@ -6,7 +6,7 @@
 #    By: carlaugu <carlaugu@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/14 16:21:28 by carlaugu          #+#    #+#              #
-#    Updated: 2025/06/24 12:58:31 by carlaugu         ###   ########.fr        #
+#    Updated: 2025/06/25 16:18:18 by carlaugu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,8 +69,8 @@ fclean: clean	## Remove executable files
 re: fclean all	## Purge and recompile
 
 vg:
-# valgrind --tool=helgrind ./${NAME} 5 800 200 300 5
-	valgrind --tool=drd ./${NAME} 5 800 200 300 5
+	valgrind --tool=helgrind ./${NAME} 200 800 200 200
+# valgrind --tool=drd ./${NAME} 5 800 200 300 5
 
 # ============================================================================ #
 # UTILS: SHELL FORMATTING                                                      #
