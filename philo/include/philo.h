@@ -112,8 +112,7 @@ void	set_bool(t_mtx *mutex, bool *val, bool code);
 void	lock_forks(t_philo *philo);
 void	unlock_forks(t_philo *philo);
 void	wait_init(t_data *data);
-void	print_action(t_action act, long time, \
-	t_mtx *mtx, t_philo *philo);
+void	print_action(t_action act, t_mtx *mtx, t_philo *philo);
 /* -------------------------------------------------------------------------- */
 /*                                    Init and End                            */
 /* -------------------------------------------------------------------------- */

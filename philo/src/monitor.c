@@ -25,8 +25,9 @@ void	*monitoring(void *info)
 	data = (t_data *)info;
 	philos = data->philos;
 	i = -1;
-	wait_init(data);
-	while (!get_bool(&data->mtx_end, &data->end_status))
+	data->start_time = get_time();
+	set_bool(&data->mtx_init, &data->ready_status, true);
+	while (1)
 	{
 		++i;
 		if (check_philos(&philos[i], data))
@@ -79,8 +80,7 @@ bool	check_diff(long diff, t_data *data, t_philo *philo)
 	if (diff > data->time_to_die)
 	{
 		set_bool(&data->mtx_end, &data->end_status, true);
-		print_action(DIE, \
-			get_time() - data->start_time, &data->mtx_print, philo);
+		print_action(DIE, &data->mtx_print, philo);
 		return (true);
 	}
 	return (false);

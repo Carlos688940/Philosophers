@@ -68,8 +68,6 @@ int	data_init(t_data *data)
 		unset_all(data, data->n_philos);
 		return (-1);
 	}
-	data->start_time = get_time();
-	set_bool(&data->mtx_init, &data->ready_status, true);
 	return (0);
 }
 

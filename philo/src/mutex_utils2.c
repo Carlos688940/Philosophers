@@ -28,8 +28,6 @@ void	set_long(t_mtx *mutex, long *var, long val)
 
 void	lock_forks(t_philo *philo)
 {
-	long	time;
-
 	if (philo->id & 1)
 	{
 		pthread_mutex_lock(philo->right_fork);
@@ -40,10 +38,8 @@ void	lock_forks(t_philo *philo)
 		pthread_mutex_lock(philo->left_fork);
 		pthread_mutex_lock(philo->right_fork);
 	}
-	time = get_time() - philo->data->start_time;
-	print_action(FORKS, time, &philo->data->mtx_print, philo);
-	time = get_time() - philo->data->start_time;
-	print_action(FORKS, time, &philo->data->mtx_print, philo);
+	print_action(FORKS, &philo->data->mtx_print, philo);
+	print_action(FORKS, &philo->data->mtx_print, philo);
 }
 
 void	ft_usleep(long time, t_philo *philo)
