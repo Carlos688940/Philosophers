@@ -29,6 +29,8 @@ void	*routine(void *data)
 		lock_forks(philo);
 		eating(philo);
 		unlock_forks(philo);
+		if (get_bool(&philo->mtx_full, &philo->full))
+			break;
 		sleeping(philo);
 		thinking(philo);
 	}
