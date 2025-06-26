@@ -57,8 +57,16 @@ void	sleeping(t_philo *philo)
 
 void	thinking(t_philo *philo)
 {
+	long	time;
+
 	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
 		return ;
 	print_action(THINK, &philo->data->mtx_print, philo);
-	usleep(200);
+	if (philo->data->time_to_die - (philo->data->time_to_eat + philo->data->time_to_sleep) > 0)
+	{
+		time = (philo->data->time_to_die - (philo->data->time_to_eat + philo->data->time_to_sleep)) / 2;
+		ft_usleep(time, philo);
+	}
+	else
+		usleep(50);
 }
