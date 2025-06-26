@@ -35,8 +35,6 @@ void	print_action(t_action act, t_mtx *mtx, t_philo *philo)
 
 	pthread_mutex_lock(mtx);
 	time = get_time() - philo->data->start_time;
-	if (act == DIE)
-			printf(RED"%ld    %d    died\n"RST, time, philo->id);
 	if (!get_bool(&philo->data->mtx_end, &philo->data->end_status))
 	{
 		if (act == EAT)
