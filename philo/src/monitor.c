@@ -32,12 +32,15 @@ void	*monitoring(void *info)
 		++i;
 		if (check_philos(&philos[i], data))
 			break ;
-		if (i == data->n_philos - 1)
-			i = -1;
 		if (data->meals_nbr && all_full(philos, data->n_philos))
 		{
 			set_bool(&data->mtx_end, &data->end_status, true);
 			break ;
+		}
+		if (i == data->n_philos - 1)
+		{
+			i = -1;
+			usleep(100);
 		}
 	}
 	return (NULL);
