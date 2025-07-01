@@ -39,7 +39,6 @@ void	lock_forks(t_philo *philo)
 		pthread_mutex_lock(philo->right_fork);
 	}
 	print_action(FORKS, &philo->data->mtx_print, philo);
-	print_action(FORKS, &philo->data->mtx_print, philo);
 }
 
 void	ft_usleep(long time, t_philo *philo)
@@ -47,13 +46,14 @@ void	ft_usleep(long time, t_philo *philo)
 	long	start;
 	long	diff;
 
+	(void)philo;
 	start = get_time();
 	diff = time;
 	while (diff > 0)
 	{
-		usleep(200);
+		usleep(300);
 		diff = time - (get_time() - start);
-		if (philo && get_bool(&philo->data->mtx_end, &philo->data->end_status))
-			break ;
+		// if (philo && get_bool(&philo->data->mtx_end, &philo->data->end_status))
+		// 	break ;
 	}
 }

@@ -22,13 +22,11 @@ void	*routine(void *data)
 
 	philo = (t_philo *)data;
 	wait_init(philo->data);
-	if (!(philo->id & 1))
-		thinking(philo);
+	if (philo->id & 1)
+		usleep(2000);
 	while (!check_status(&philo->data->mtx_end, &philo->data->end_status))
 	{
-		lock_forks(philo);
 		eating(philo);
-		unlock_forks(philo);
 		if (get_bool(&philo->mtx_full, &philo->full))
 			break;
 		sleeping(philo);
@@ -39,14 +37,19 @@ void	*routine(void *data)
 
 void	eating(t_philo *philo)
 {
+	lock_forks(philo);
 	if (get_bool(&philo->data->mtx_end, &philo->data->end_status))
+	{
+		unlock_forks(philo);
 		return ;
+	}
 	philo->meals_count++;
 	print_action(EAT, &philo->data->mtx_print, philo);
 	set_long(&philo->mtx_lst_meal, &philo->lst_meal, get_time());
 	ft_usleep(philo->data->time_to_eat, philo);
 	if (philo->data->meals_nbr && philo->meals_count == philo->data->meals_nbr)
 		set_bool(&philo->mtx_full, &philo->full, true);
+	unlock_forks(philo);
 }
 
 void	sleeping(t_philo *philo)

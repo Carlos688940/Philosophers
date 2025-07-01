@@ -40,7 +40,10 @@ void	print_action(t_action act, t_mtx *mtx, t_philo *philo)
 		if (act == EAT)
 			printf(GRN"%ld    %d    is eating\n"RST, time, philo->id);
 		else if (act == FORKS)
+		{
 			printf(ORG"%ld    %d    has taken a fork\n"RST, time, philo->id);
+			printf(ORG"%ld    %d    has taken a fork\n"RST, time, philo->id);
+		}
 		else if (act == SLEEP)
 			printf(BLUE"%ld    %d    is sleeping\n"RST, time, philo->id);
 		else if (act == THINK)
