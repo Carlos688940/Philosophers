@@ -86,6 +86,7 @@ bool	check_diff(long diff, t_data *data, t_philo *philo)
 	if (diff > data->time_to_die)
 	{
 		set_bool(&data->mtx_end, &data->end_status, true);
+		print_action(DIE, &data->mtx_print, philo);
 		printf(RED"%ld    %d    died\n"RST, get_time() - data->start_time, philo->id);
 		return (true);
 	}

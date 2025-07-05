@@ -33,7 +33,7 @@ BUILD_DIR	= .build
 # ============================================================================ #
 CC	= cc
 CFLAGS	=  -Wall -Wextra -Werror
-CFLAGS	+= -fsanitize=thread -g -pthread
+# CFLAGS	+= -fsanitize=thread -g -pthread
 
 MAKE	= make -C
 
@@ -69,7 +69,7 @@ fclean: clean	## Remove executable files
 re: fclean all	## Purge and recompile
 
 vg:
-	valgrind --tool=helgrind ./${NAME} 200 800 200 200
+	valgrind --tool=helgrind ./${NAME} 6 410 200 200 1
 # valgrind --tool=drd ./${NAME} 5 800 200 300 5
 
 # ============================================================================ #

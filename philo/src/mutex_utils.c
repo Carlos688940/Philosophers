@@ -46,5 +46,5 @@ bool	check_status(t_mtx *mtx, bool *status)
 void	wait_init(t_data *data)
 {
 	while (!get_bool(&data->mtx_init, &data->ready_status))
-		usleep(1);
+		;
 }

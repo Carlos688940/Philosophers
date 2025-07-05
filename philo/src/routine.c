@@ -22,8 +22,8 @@ void	*routine(void *data)
 
 	philo = (t_philo *)data;
 	wait_init(philo->data);
-	if (philo->id & 1)
-		usleep(2000);
+	if (!(philo->id & 1))
+		usleep(philo->data->time_to_eat / 2);
 	while (!check_status(&philo->data->mtx_end, &philo->data->end_status))
 	{
 		eating(philo);

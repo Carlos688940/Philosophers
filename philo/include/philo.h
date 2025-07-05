@@ -37,6 +37,7 @@ typedef enum s_action
 	EAT,
 	SLEEP,
 	THINK,
+	DIE
 }	t_action;
 
 typedef struct s_data
